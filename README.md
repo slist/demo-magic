@@ -1,0 +1,2 @@
+# demo-magic
+Magical demos
