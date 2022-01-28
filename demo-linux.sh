@@ -60,11 +60,11 @@ fi
 
 echo ""
 echo "---"
-echo "Downloading a copy of VMware website... (first page only ;-)"
+echo "Downloading a copy of ${WEBSITE_TITLE} website... (first page only ;-)"
 echo -e "${GREEN}Press ENTER${NC}, and wait 20s..."
 wait
 
-# Check if VMware website copy is in /etc/host
+# Check if website copy is in /etc/host
 grep ${WEBSITE_URL} /etc/hosts >/dev/null
 if [ $? -eq 1 ]
 then
