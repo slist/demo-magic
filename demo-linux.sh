@@ -80,6 +80,8 @@ else
 	sudo adduser ${USER} www-data
 	sudo usermod -a -G www-data ${USER}
 	newgrp www-data
+	echo -e ${RED}"Please logout/login...${NC}"
+	exit 0
 fi
 
 cd /var/www/html
@@ -160,19 +162,19 @@ wait
 echo ""
 echo "---"
 echo -e "Let's check that our ${GREEN}copy${NC} of ${GREEN}${WEBSITE_TITLE}${NC} website is running"
-pe "firefox http://${WEBSITE_URL}.copy &"
+pe "firefox http://${WEBSITE_URL}.copy >/dev/null 2>&1 &"
 wait
 
 echo ""
 echo "---"
 echo -e "Let's imagine that a malicious user as found a vulnerability in the website to ${RED}inject PHP code${NC}"
-pe "firefox http://${WEBSITE_URL}.copy/attack.php &"
+pe "firefox http://${WEBSITE_URL}.copy/attack.php >/dev/null 2>&1 &"
 wait
 
 echo ""
 echo "---"
 echo "Let's see how our website looks like now !!! "
-pe "firefox http://${WEBSITE_URL}.copy &"
+pe "firefox http://${WEBSITE_URL}.copy >/dev/null 2>&1 &"
 wait
 
 echo ""
@@ -180,7 +182,7 @@ echo "---"
 echo -e "${GREEN}Investigate${NC} in VMware Carbon Black Cloud console with the following query:"
 echo "(process_name:apache2 AND childproc_name:\/usr\/bin\/dash)"
 echo -e "Create an ${GREEN}custom Indicator of Compromise (IOC]${NC} and rerun the attack:"
-pe "firefox http://${WEBSITE_URL}.copy/attack.php &"
+pe "firefox http://${WEBSITE_URL}.copy/attack.php >/dev/null 2>&1 &"
 wait
 
 wait

