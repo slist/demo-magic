@@ -141,11 +141,11 @@ wait
 # pei : Print and Execute immediately.
 # p   : Print only.
 # w   : wait
-# cmd : interractive mode
+# cmd : interactive mode
 
 #clear
 echo "---"
-echo -e "${RED}VMware Carbon Black Cloud linux${NC} can protect many Linux distributions:"
+echo -e "${RED}VMware Carbon Black Cloud Linux${NC} can protect many Linux distributions:"
 wait
 echo " - Ubuntu / Debian"
 wait

@@ -23,7 +23,6 @@ PROMPT_TIMEOUT=0
 # don't show command number unless user specifies it
 SHOW_CMD_NUMS=false
 
-
 # handy color vars for pretty prompts
 BLACK="\033[0;30m"
 BLUE="\033[0;34m"
@@ -38,7 +37,7 @@ COLOR_RESET="\033[0m"
 
 C_NUM=0
 
-# prompt and command color which can be overriden
+# prompt and command color which can be overridden
 DEMO_PROMPT="$ "
 DEMO_CMD_COLOR=$WHITE
 DEMO_COMMENT_COLOR=$GREY

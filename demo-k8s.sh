@@ -54,7 +54,7 @@ fi
 # pei : Print and Execute immediately.
 # p   : Print only.
 # w   : wait
-# cmd : interractive mode
+# cmd : interactive mode
 
 clear
 echo "---"
@@ -73,7 +73,7 @@ echo "---"
 echo -e "${RED}VMware Carbon Black Cloud Containers${NC} can protect:"
 echo -e " - K8s onprem"
 echo -e " - K8s in public cloud, for example Amazon, Azure, or Google..."
-echo -e " - mikikube"
+echo -e " - minikube"
 echo -e " - microk8s"
 echo -e " - and of course VMware Tanzu."
 
@@ -133,7 +133,7 @@ wait
 
 clear
 echo "---"
-echo -e "Let's do a diff betwwen the ${GREEN}GOOD${NC} and the ${RED}BAD${NC} deployment files."
+echo -e "Let's do a diff between the ${GREEN}GOOD${NC} and the ${RED}BAD${NC} deployment files."
 pe "meld good.yaml bad.yaml &"
 wait
 
@@ -170,8 +170,8 @@ wait
 
 clear
 echo "---"
-echo -e "As a developper, how can I ${GREEN}validate${NC} my YAML file to deploy the image?"
-echo -e "As a developper, I would like do it ${GREEN}manually${NC} or automate the validation in my ${GREEN}CICD pipeline${NC}."
+echo -e "As a developer, how can I ${GREEN}validate${NC} my YAML file to deploy the image?"
+echo -e "As a developer, I would like do it ${GREEN}manually${NC} or automate the validation in my ${GREEN}CICD pipeline${NC}."
 echo -e "Let's validate the ${GREEN}GOOD${NC} deployment file"
 pe "cbctl k8s-object validate -f good.yaml"
 
