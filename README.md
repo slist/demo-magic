@@ -1,9 +1,10 @@
 # demo-magic
 Magical demos
 
-Download all sh files on Ubuntu 20.04 LTS
+Download all files on Ubuntu 20.04 LTS
 
 ``` sh
+git clone https://github.com/slist/demo-magic.git
 chmod +x demo-linux.sh
 chmod +x demo-k8s.sh
 ```
