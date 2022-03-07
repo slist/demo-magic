@@ -5,11 +5,11 @@ GREEN='\033[1;32m'
 NC='\033[0m' # No Color
 
 apt_check_and_install () {
-   dpkg -s $1 >/dev/null
+   dpkg -s "$1" >/dev/null
    if [ $? -eq 1 ]
    then
       echo "Install $1"
-      sudo apt-get install -y $1
+      sudo apt-get install -y "$1"
    fi
 }
 
@@ -27,8 +27,8 @@ then
 fi
 
 # if minikube exist, then define kubectl alias
-which minikube >/dev/null
-if [ $? -eq 0 ]
+
+if which minikube >/dev/null;
 then
    shopt -s expand_aliases
    alias kubectl='minikube kubectl'
@@ -36,8 +36,7 @@ then
 fi
 
 # if microk8s exist, then define kubectl alias
-which microk8s >/dev/null
-if [ $? -eq 0 ]
+if which microk8s >/dev/null
 then
    shopt -s expand_aliases
    alias kubectl='microk8s kubectl'
@@ -47,7 +46,7 @@ fi
 ####################################
 ###      include the magic       ###
 ####################################
-. demo-magic.sh
+source demo-magic.sh
 
 # pe  : Print and Execute.
 # pei : Print and Execute immediately.
@@ -104,7 +103,7 @@ then
 else
       wait
       echo ""
-      echo ${intro}
+      echo "${intro}"
 fi
 wait
 
@@ -221,7 +220,7 @@ echo "---"
 echo "Let's list all pods:"
 pe "kubectl get pods"
 
-firstpod=`kubectl get pods --no-headers | head -n1 | awk '{print $1;}'`
+firstpod=$(kubectl get pods --no-headers | head -n1 | awk '{print $1;}')
 
 wait
 echo ""
@@ -309,7 +308,7 @@ pei "kubectl get services -n netdemo"
 
 echo -e "---"
 echo -e "Let's connect to the ${RED}malicious${NC} demo pod"
-port=`kubectl get services -n netdemo --no-headers | sed "s/.*://" | cut -f1 -d"/"`
+port=$(kubectl get services -n netdemo --no-headers | sed "s/.*://" | cut -f1 -d"/")
 pe "firefox http://127.0.0.1:${port}"
 wait
 }
