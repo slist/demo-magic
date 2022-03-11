@@ -260,7 +260,7 @@ wait
 echo -e ""
 echo -e "---"
 echo -e "Let's scan a container with the ${RED}log4j vulnerability${NC}"
-pe "cbctl image scan tamirmich/log4j2-demo:0.0.3"
+pe "cbctl image scan tamirmich/log4j2-demo:0.0.1"
 wait
 
 echo ""
@@ -287,11 +287,11 @@ wait
 
 demo_runtime() {
 clear
-echo -e "---"
-echo -e "In CBC UI, ${GREEN}unblock${NC} deployments with no CPU/mem quotas."
-echo -e ""
+#echo -e "---"
+#echo -e "In CBC UI, ${GREEN}unblock${NC} deployments with no CPU/mem quotas."
+#echo -e ""
 
-wait
+#wait
 echo -e "---"
 echo -e "In our K8s clusters, we can monitor/alert on ${RED}runtime network malicious activities${NC} such as:"
 echo " - Malicious IPs/URLs"
@@ -302,7 +302,8 @@ echo -e "Let's deploy an image to simulate ${RED}malicious network activities${N
 pei "git clone https://github.com/0pens0/cb_demos.git"
 pei "cd cb_demos/netdemo/"
 pei "kubectl create namespace netdemo"
-pei "kubectl create -f deploy/. -n netdemo"
+pei "kubectl create -f deploy/k8s_deployment_good_config.yml -n netdemo"
+pei "kubectl create -f deploy/k8s_configmap_sql.yaml -n netdemo"
 pei "kubectl create -f k8s_service.yaml -n netdemo"
 pei "kubectl get services -n netdemo"
 
