@@ -5,6 +5,7 @@ Download all files on Ubuntu 20.04 LTS
 
 ``` sh
 git clone https://github.com/slist/demo-magic.git
+cd demo-magic
 chmod +x demo-linux.sh
 chmod +x demo-k8s.sh
 ```
