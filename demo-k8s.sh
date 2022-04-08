@@ -260,7 +260,7 @@ wait
 echo -e ""
 echo -e "---"
 echo -e "Let's scan a container with the ${RED}log4j vulnerability${NC}"
-pe "cbctl image scan tamirmich/log4j2-demo:0.0.1"
+pe "cbctl image scan tamirmich/log4j2-demo:0.0.3"
 wait
 
 echo ""
