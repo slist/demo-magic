@@ -15,11 +15,11 @@ echo "Preparing demo..."
 ########################
 . demo-magic.sh
 
-echo "Check gcc, make..."
-
 RED='\033[1;31m'
 GREEN='\033[1;32m'
 NC='\033[0m' # No Color
+
+echo "Check gcc, make..."
 
 # Install necessary Ubuntu packages
 # Check if gcc package is installed
@@ -29,7 +29,7 @@ then
    sudo apt-get install -y gcc
 fi
 
-# Check if meld package is installed
+# Check if make package is installed
 dpkg -s make >/dev/null
 if [ $? -eq 1 ]
 then
@@ -57,6 +57,10 @@ if [ $? -eq 1 ]
 then
    sudo apt-get install -y php
 fi
+
+echo "Clean up previous demos..."
+rm -rf $HOME/cctest >/dev/null 2>&1
+rm -rf $HOME/sleepy* >/dev/null 2>&1
 
 echo ""
 echo "---"
@@ -149,7 +153,7 @@ echo -e "${RED}VMware Carbon Black Cloud Linux${NC} can protect many Linux distr
 wait
 echo " - Ubuntu / Debian"
 wait
-echo " - RedHat / CentOS"
+echo " - RedHat / CentOS / Oracle"
 wait
 echo " - Suse / OpenSuse"
 wait
@@ -212,19 +216,22 @@ pe "./sleepy_binary"
 echo ""
 
 echo "---"
-echo -e "VMware Carbon Black provides a ${GREEN}Linux test file${NC}, something like ${GREEN}EICAR${NC} on Windows"
-echo "Let's download it"
-pe "wget https://github.com/slist/LinuxMalware/raw/main/cctest"
-echo ""
-echo "And run it"
-pe "./cctest"
-echo ""
-echo "And once again"
-pe "./cctest"
-echo ""
-echo ""
-echo "---"
-echo -e "In 1 minute maximum, you will see some ${RED}alerts${NC} in VMware Carbon Black console"
+#echo -e "VMware Carbon Black provides a ${GREEN}Linux test file${NC}, something like ${GREEN}EICAR${NC} on Windows"
+#echo "Let's download it"
+#pe "wget https://github.com/slist/LinuxMalware/raw/main/cctest"
+#echo ""
+#echo "Let's make it executable"
+#pe "chmod +x cctest"
+#echo ""
+#echo "And run it"
+#pe "./cctest"
+#echo ""
+#echo "And once again"
+#pe "./cctest"
+#echo ""
+#echo ""
+#echo "---"
+#echo -e "In 1 minute maximum, you will see some ${RED}alerts${NC} in VMware Carbon Black console"
 echo ""
 echo ""
 echo -e "${GREEN}THANK YOU!${NC}"
