@@ -38,6 +38,10 @@ fi
 # if microk8s exist, then define kubectl alias
 if which microk8s >/dev/null
 then
+   # Temporary fix for microk8s
+   sudo rm -rf /run/containerd/containerd.sock
+   sudo ln -s /var/snap/microk8s/common/run/containerd.sock /run/containerd/containerd.sock
+
    shopt -s expand_aliases
    alias kubectl='microk8s kubectl'
    intro="For this demo, we will use microK8s."
@@ -314,6 +318,53 @@ pe "firefox http://127.0.0.1:${port}"
 wait
 }
 
+#####################################
+###        ENFORCE                ###
+#####################################
+
+demo_enforce() {
+clear
+
+# Cleanup enforce demo
+rm -rf nginx.yaml temp.yaml
+kubectl delete deployments.apps nginx >/dev/null 2>&1
+
+
+echo "---"
+echo -e "Check that CB mutating hook is ready"
+pe "kubectl get mutatingwebhookconfigurations.admissionregistration.k8s.io"
+
+echo "---"
+echo -e "Let's create a new ${RED}unsecure${NC} deployment file."
+
+echo -e "First we will create a nginx deployment."
+pe "kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > temp.yaml"
+
+echo -e "Remove status line"
+pei "grep -v status temp.yaml |grep -v null >nginx.yaml"
+
+#echo -e "Now will add ${RED}privileges${NC} to this deployment"
+echo -e "Now will allow ${RED}privilege escalation${NC}"
+echo -e "Add privileged security context"
+pei "echo \"        securityContext:\" >> nginx.yaml"
+pei "echo \"          privileged: true\" >> nginx.yaml"
+
+echo ""
+echo "---"
+cat nginx.yaml
+wait
+
+echo ""
+echo "---"
+echo -e "Now will deploy this ${RED}unsecure${NC} deployment file."
+pe "kubectl apply -f nginx.yaml"
+wait
+
+echo -e "What is the deployment in production now ?"
+pe "kubectl get deployments nginx --output=yaml"
+
+}
+
 demo_end() {
 echo ""
 echo ""
@@ -336,6 +387,7 @@ demo_log4j
 #demo_quota
 #demo_exec
 #demo_go
+demo_enforce
 
 demo_end
 
