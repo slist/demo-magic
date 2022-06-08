@@ -335,7 +335,7 @@ echo -e "Check that CB mutating webhook is ready"
 pe "kubectl get mutatingwebhookconfigurations.admissionregistration.k8s.io"
 
 echo "---"
-echo -e "Let's create a new ${RED}unsecure${NC} deployment file (with ${RED}privileges${NC})."
+echo -e "Let's create a new ${RED}insecure${NC} deployment file (with ${RED}privileges${NC})."
 
 echo -e "First we will create a nginx deployment."
 pe "kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > temp.yaml"
@@ -357,7 +357,7 @@ wait
 
 echo ""
 echo "---"
-echo -e "Now, we will deploy this ${RED}unsecure${NC} deployment file."
+echo -e "Now, we will deploy this ${RED}insecure${NC} deployment file."
 pe "kubectl apply -f nginx.yaml"
 wait
 
