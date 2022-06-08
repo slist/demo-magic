@@ -328,14 +328,14 @@ clear
 # Cleanup enforce demo
 rm -rf nginx.yaml temp.yaml
 kubectl delete deployments.apps nginx >/dev/null 2>&1
-
+kubectl delete services nginx >/dev/null 2>&1
 
 echo "---"
-echo -e "Check that CB mutating hook is ready"
+echo -e "Check that CB mutating webhook is ready"
 pe "kubectl get mutatingwebhookconfigurations.admissionregistration.k8s.io"
 
 echo "---"
-echo -e "Let's create a new ${RED}unsecure${NC} deployment file."
+echo -e "Let's create a new ${RED}unsecure${NC} deployment file (with ${RED}privileges${NC})."
 
 echo -e "First we will create a nginx deployment."
 pe "kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > temp.yaml"
@@ -345,10 +345,8 @@ echo -e "Cleanup the deployment file"
 pei "grep -v status temp.yaml |grep -v null >nginx.yaml"
 
 echo ""
-echo -e "Now, we will add a network port and ${RED}privileges${NC} to this deployment"
+echo -e "Now, we will add ${RED}privileges${NC} to this deployment"
 
-pei "echo \"        ports:\" >> nginx.yaml"
-pei "echo \"        - containerPort: 80\" >> nginx.yaml"
 pei "echo \"        securityContext:\" >> nginx.yaml"
 pei "echo \"          privileged: true\" >> nginx.yaml"
 
@@ -368,9 +366,11 @@ pe "kubectl get deployments nginx --output=yaml"
 wait
 
 echo -e "---"
-echo -e "Let's connect to ${GREEN}nginx{NC}"
-port=$(kubectl get services -n nginx --no-headers | sed "s/.*://" | cut -f1 -d"/")
-pe "firefox http://127.0.0.1:${port}"
+echo -e "Let's connect to ${GREEN}nginx${NC}"
+pei "kubectl expose deployment nginx --port 80"
+pei "kubectl get services"
+ip=$(kubectl get services nginx --no-headers  | awk '{print $3}')
+pe "firefox http://${ip} 2>/dev/null"
 wait
 }
 
