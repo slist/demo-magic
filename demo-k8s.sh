@@ -340,12 +340,15 @@ echo -e "Let's create a new ${RED}unsecure${NC} deployment file."
 echo -e "First we will create a nginx deployment."
 pe "kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > temp.yaml"
 
-echo -e "Remove status line"
+echo ""
+echo -e "Cleanup the deployment file"
 pei "grep -v status temp.yaml |grep -v null >nginx.yaml"
 
-#echo -e "Now will add ${RED}privileges${NC} to this deployment"
-echo -e "Now will allow ${RED}privilege escalation${NC}"
-echo -e "Add privileged security context"
+echo ""
+echo -e "Now, we will add a network port and ${RED}privileges${NC} to this deployment"
+
+pei "echo \"        ports:\" >> nginx.yaml"
+pei "echo \"        - containerPort: 80\" >> nginx.yaml"
 pei "echo \"        securityContext:\" >> nginx.yaml"
 pei "echo \"          privileged: true\" >> nginx.yaml"
 
@@ -356,13 +359,19 @@ wait
 
 echo ""
 echo "---"
-echo -e "Now will deploy this ${RED}unsecure${NC} deployment file."
+echo -e "Now, we will deploy this ${RED}unsecure${NC} deployment file."
 pe "kubectl apply -f nginx.yaml"
 wait
 
 echo -e "What is the deployment in production now ?"
 pe "kubectl get deployments nginx --output=yaml"
+wait
 
+echo -e "---"
+echo -e "Let's connect to ${GREEN}nginx{NC}"
+port=$(kubectl get services -n nginx --no-headers | sed "s/.*://" | cut -f1 -d"/")
+pe "firefox http://127.0.0.1:${port}"
+wait
 }
 
 demo_end() {
