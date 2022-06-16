@@ -198,7 +198,7 @@ pe "kubectl get all"
 wait
 echo ""
 echo "So, how to check if the app is running?"
-pe "firefox http://127.0.0.1:30333 &"
+pe "firefox http://127.0.0.1:30333 2>/dev/null"
 wait
 
 clear
@@ -314,7 +314,7 @@ pei "kubectl get services -n netdemo"
 echo -e "---"
 echo -e "Let's connect to the ${RED}malicious${NC} demo pod"
 port=$(kubectl get services -n netdemo --no-headers | sed "s/.*://" | cut -f1 -d"/")
-pe "firefox http://127.0.0.1:${port}"
+pe "firefox http://127.0.0.1:${port} 2>/dev/null"
 wait
 }
 
