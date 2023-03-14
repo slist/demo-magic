@@ -17,6 +17,7 @@ apt_check_and_install () {
 apt_check_and_install "pv"   # Used to simulate typing
 apt_check_and_install "meld" # Used to show differences between good/bad YAML files
 apt_check_and_install "git"  # Used to download netdemo
+apt_check_and_install "jq"   # Used to parse JSON
 
 # Check that cbctl is present in the PATH
 which cbctl >/dev/null
@@ -66,14 +67,15 @@ clear
 echo "---"
 echo "Preparing demo..."
 
-rm -f good.yaml bad.yaml >/dev/null 2>&1
+rm -f *.yaml >/dev/null 2>&1
 
 kubectl delete deployment nodeapp >/dev/null 2>&1
+kubectl delete deployment nginx >/dev/null 2>&1
+
 kubectl delete service nodeapp-service >/dev/null 2>&1
 
 kubectl delete pod log4j >/dev/null 2>&1
 kubectl delete pod nginx >/dev/null 2>&1
-
 
 kubectl delete ns netdemo >/dev/null 2>&1
 kubectl delete service netdemo-service -n netdemo >/dev/null 2>&1
@@ -82,6 +84,8 @@ kubectl delete pod netdemo -n netdemo>/dev/null 2>&1
 
 rm -rf cb_demos >/dev/null 2>&1
 
+kubectl delete deployment malware-app >/dev/null 2>&1
+
 #####################################
 ###        DEMO INTRO             ###
 #####################################
@@ -89,15 +93,15 @@ rm -rf cb_demos >/dev/null 2>&1
 demo_intro() {
 clear
 echo "---"
-echo -e "${RED}VMware Carbon Black Cloud Containers${NC} can protect:"
-echo -e " - K8s onprem"
-echo -e " - K8s in public cloud, for example Amazon, Azure, or Google..."
+echo -e "${RED}VMware Carbon Black Cloud Container${NC} can protect:"
+echo -e " - Kubernetes onprem"
+echo -e " - Kubernetes in public cloud, for example Amazon (EKS), Azure(AKS), or Google(GKE).."
 echo -e " - minikube"
 echo -e " - microK8s"
 
 # Depending on your customer, you can enable the following lines
-#echo -e " - OpenShift"
-#echo -e " - Rancher"
+echo -e " - OpenShift"
+echo -e " - Rancher"
 
 echo -e " - and of course VMware Tanzu."
 
@@ -113,13 +117,13 @@ wait
 
 clear
 echo "---"
-echo -e "Let's check that CBC is ${GREEN}running${NC} in this K8s cluster."
-echo -e "How to check what pods are running in the K8s cluster?"
+echo -e "Let's check that VMware Carbon Black Container is ${GREEN}running${NC} in this Kubernetes cluster."
+echo -e "How to check what pods are running in the Kubernetes cluster?"
 pe "kubectl get pods -A"
 wait
 echo -e ""
 echo -e "---"
-echo -e "CBC is running in it's own NAMESPACE ${GREEN}cbcontainers-dataplane${NC}."
+echo -e "Carbon Black Container is running in it's own NAMESPACE ${GREEN}cbcontainers-dataplane${NC}."
 wait
 }
 
@@ -130,9 +134,9 @@ wait
 demo_daemonset() {
 clear
 echo "---"
-echo -e "VMware CBC is deployed in each K8s cluster."
-echo -e "VMware CBC ${GREEN}node agent${NC} is deployed as a ${GREEN}daemonset${NC} in each K8s node."
-echo "It means that in a K8s cluster with CBC, on each K8s node, a CBC agent will run."
+echo -e "VMware Carbon Black Container is deployed in each Kubernetes cluster."
+echo -e "VMware Carbon Black Container ${GREEN}node agent${NC} is deployed as a ${GREEN}daemonset${NC} in each Kubernetes node."
+echo "It means that in a Kubernetes cluster with VMware Carbon Black Container, on each Kubernetes node, a VMware Carbon Black Container agent will run."
 echo "Daemonsets are commonly used for monitoring, networking and security solutions."
 pe "kubectl get daemonsets -n cbcontainers-dataplane"
 wait
@@ -147,16 +151,17 @@ clear
 echo -e "---"
 echo -e "We would like to deploy a ${GREEN}node.js${NC} application called ${GREEN}nodeapp${NC}."
 echo -e "But before deploying it, we would like to apply a security policy."
-echo -e "In CBC UI, create a policy to ${RED}BLOCK deployments with no CPU/mem quotas${NC}."
+echo -e "In VMware Carbon Black Container web UI, create a policy to ${RED}BLOCK deployments with no CPU/mem quotas${NC}."
 echo -e ""
 echo -e "Why a ${RED}minimum${NC} quota?"
 p "To be sure the pod will have enough CPU/mem to run correctly."
 echo -e "Why a ${RED}maximum${NC} quota?"
-p "To be sure the pod will not eat all CPU/mem, because of a bug or a cryptominer virus or someone playing Pacman..."
+p "To be sure the pod will not eat all CPU/mem, because of a bug or a cryptominer virus.."
 wait
 clear
 echo -e "---"
 echo -e "We have prepared 2 deployment files, the ${GREEN}GOOD${NC} and the ${RED}BAD${NC} deployment files."
+rm *.yaml
 wget https://raw.githubusercontent.com/slist/K8sConfigs/main/good/deployment.yaml >/dev/null  2>&1
 mv deployment.yaml good.yaml 2>/dev/null
 wget https://raw.githubusercontent.com/slist/K8sConfigs/main/bad/deployment.yaml >/dev/null  2>&1
@@ -213,6 +218,10 @@ echo "---"
 echo -e "So, what was wrong with the ${RED}BAD${NC} deployment file?"
 pe "cbctl k8s-object validate -f bad.yaml"
 wait
+
+#Uninstall nodeapp
+kubectl delete deployment nodeapp >/dev/null 2>&1
+kubectl delete service nodeapp-service >/dev/null 2>&1
 }
 #####################################
 ###          EXEC                 ###
@@ -220,7 +229,11 @@ wait
 
 demo_exec() {
 clear
+echo "Exec demo"
 echo "---"
+echo -e "First we will create a nginx deployment, it could be any container image."
+pe "kubectl create deployment nginx --image=nginx"
+
 echo "Let's list all pods:"
 pe "kubectl get pods"
 
@@ -240,7 +253,7 @@ clear
 echo "---"
 echo -e "${GREEN}Check logs in K8s violations.${NC}"
 echo "---"
-echo -e "Modify CBC K8s to ${RED}BLOCK --- COMMAND / Exec to container---${NC}"
+echo -e "Modify VMware Carbon Black Container to ${RED}BLOCK --- COMMAND / Exec to container---${NC}"
 wait
 echo ""
 echo -e "Let's open a shell in the pod, and try to download a malware"
@@ -257,8 +270,9 @@ wait
 
 demo_log4j() {
 clear
+echo "Log4j demo"
 echo "---"
-echo -e "Modify CBC K8s to ${RED}BLOCK --- CONTAINER IMAGES / Critical vulnerabilities ---${NC}"
+echo -e "Modify VMware Carbon Black Container to ${RED}BLOCK --- CONTAINER IMAGES / Critical vulnerabilities ---${NC}"
 echo -e "Create an ${GREEN}exception${NC} if needed"
 wait
 echo -e ""
@@ -272,6 +286,13 @@ echo -e "In our ${GREEN}CICD pipeline${NC} we have integrated the automated vuln
 echo -e "Let's try to deploy the image containing the ${RED}log4j critical vulnerability${NC}"
 pe "kubectl run log4j --image=tamirmich/log4j2-demo:0.0.3"
 wait
+
+echo "---"
+echo -e "Modify VMware Carbon Black Container to ${RED}ALERT --- CONTAINER IMAGES / Critical vulnerabilities ---${NC}"
+wait
+
+#In case it was not blocked, delete this log4j pod
+kubectl delete pod log4j >/dev/null 2>&1
 }
 
 #####################################
@@ -280,8 +301,8 @@ wait
 
 demo_go() {
 echo -e "---"
-echo -e "Let's scan a container with ${GREEN}GO${NC} packages"
-pe "cbctl image scan anchore/syft"
+echo -e "Let's scan an old vulnerable container with ${GREEN}GO${NC} packages"
+pe "cbctl image scan anchore/syft:v0.20.0"
 wait
 }
 
@@ -297,7 +318,7 @@ clear
 
 #wait
 echo -e "---"
-echo -e "In our K8s clusters, we can monitor/alert on ${RED}runtime network malicious activities${NC} such as:"
+echo -e "In our Kubernetes clusters, we can monitor/alert on ${RED}runtime network malicious activities${NC} such as:"
 echo " - Malicious IPs/URLs"
 echo " - Port scan"
 echo " - Baseline behavior"
@@ -313,7 +334,11 @@ pei "kubectl get services -n netdemo"
 
 echo -e "---"
 echo -e "Let's connect to the ${RED}malicious${NC} demo pod"
+
+# TODO : Use jq instead, something like
+# kubectl get svc/kubernetes -o json | jq .spec.ports[0].port
 port=$(kubectl get services -n netdemo --no-headers | sed "s/.*://" | cut -f1 -d"/")
+
 pe "firefox http://127.0.0.1:${port} 2>/dev/null"
 wait
 }
@@ -331,12 +356,15 @@ kubectl delete deployments.apps nginx >/dev/null 2>&1
 kubectl delete services nginx >/dev/null 2>&1
 
 echo "---"
+echo -e "Modify VMware Carbon Black Container to ${RED}ENFORCE --- Allow PRIVILEGED containers---${NC}"
+wait
+echo ""
 echo -e "Check that CB mutating webhook is ready"
 pe "kubectl get mutatingwebhookconfigurations.admissionregistration.k8s.io"
 
 echo "---"
 echo -e "Let's create a new ${RED}insecure${NC} deployment file (with ${RED}privileges${NC})."
-
+echo ""
 echo -e "First we will create a nginx deployment."
 pe "kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > temp.yaml"
 
@@ -374,6 +402,21 @@ pe "firefox http://${ip} 2>/dev/null"
 wait
 }
 
+demo_malware() {
+clear
+echo "---"
+echo -e "As a developer, I would like to check that a container image doesn't contain a ${RED}malware${NC}."
+pe "cbctl image scan xmrig/xmrig"
+echo "---"
+echo -e "xmrig is a popular ${RED}crypto miner${NC} used on Linux and in Containers."
+echo -e "Now let's scan and deploy a fake ${RED}malware${NC}, and see in CBC UI / Container Images / File Reputations."
+pe "cbctl image scan octarinesec/public-image-scanning-demo:malware-mixed-files-27-01-2023"
+echo "---"
+pei "kubectl create deployment --image=octarinesec/public-image-scanning-demo:malware-mixed-files-27-01-2023 malware-app"
+wait
+}
+
+
 demo_end() {
 echo ""
 echo ""
@@ -389,14 +432,24 @@ echo ""
 demo_intro
 demo_daemonset
 
+#Runtime demo - Network
 demo_runtime
+
+#Vulnerability management
 demo_log4j
 
 # Use this demo for DEV/SEC/OPS only
 #demo_quota
+# Warning: demo_exec needs demo_quota
 #demo_exec
+
 #demo_go
+
+#Hardening / Mutate
 demo_enforce
+
+#Malware scan
+demo_malware
 
 demo_end
 
