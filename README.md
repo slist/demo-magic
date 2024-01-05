@@ -15,7 +15,7 @@ chmod +x demo-k8s.sh
 ./demo-linux.sh
 ```
 
-## If you want to demo VMware Carbon Black Cloud Container (Ubuntu 20.04 or Ubuntu 22.04),  
+## If you want to demo Carbon Black Cloud Container (Ubuntu 20.04 or Ubuntu 22.04),  
 at the end of demo-k8s.sh, comment/uncomment the feature you would like to demo, and then run:
 ``` sh
 ./demo-k8s.sh
