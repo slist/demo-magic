@@ -93,7 +93,7 @@ kubectl delete deployment malware-app >/dev/null 2>&1
 demo_intro() {
 clear
 echo "---"
-echo -e "${RED}VMware Carbon Black Cloud Container${NC} can protect:"
+echo -e "${RED}Carbon Black Cloud Container${NC} can protect:"
 echo -e " - Kubernetes onprem"
 echo -e " - Kubernetes in public cloud, for example Amazon (EKS), Azure(AKS), or Google(GKE).."
 echo -e " - minikube"
@@ -103,7 +103,7 @@ echo -e " - microK8s"
 echo -e " - OpenShift"
 echo -e " - Rancher"
 
-echo -e " - and of course VMware Tanzu."
+echo -e " - and of course Tanzu."
 
 if test -z "$intro" 
 then
@@ -117,7 +117,7 @@ wait
 
 clear
 echo "---"
-echo -e "Let's check that VMware Carbon Black Container is ${GREEN}running${NC} in this Kubernetes cluster."
+echo -e "Let's check that Carbon Black Container is ${GREEN}running${NC} in this Kubernetes cluster."
 echo -e "How to check what pods are running in the Kubernetes cluster?"
 pe "kubectl get pods -A"
 wait
@@ -134,9 +134,9 @@ wait
 demo_daemonset() {
 clear
 echo "---"
-echo -e "VMware Carbon Black Container is deployed in each Kubernetes cluster."
-echo -e "VMware Carbon Black Container ${GREEN}node agent${NC} is deployed as a ${GREEN}daemonset${NC} in each Kubernetes node."
-echo "It means that in a Kubernetes cluster with VMware Carbon Black Container, on each Kubernetes node, a VMware Carbon Black Container agent will run."
+echo -e "Carbon Black Container is deployed in each Kubernetes cluster."
+echo -e "Carbon Black Container ${GREEN}node agent${NC} is deployed as a ${GREEN}daemonset${NC} in each Kubernetes node."
+echo "It means that in a Kubernetes cluster with Carbon Black Container, on each Kubernetes node, a Carbon Black Container agent will run."
 echo "Daemonsets are commonly used for monitoring, networking and security solutions."
 pe "kubectl get daemonsets -n cbcontainers-dataplane"
 wait
@@ -151,7 +151,7 @@ clear
 echo -e "---"
 echo -e "We would like to deploy a ${GREEN}node.js${NC} application called ${GREEN}nodeapp${NC}."
 echo -e "But before deploying it, we would like to apply a security policy."
-echo -e "In VMware Carbon Black Container web UI, create a policy to ${RED}BLOCK deployments with no CPU/mem quotas${NC}."
+echo -e "In Carbon Black Container web UI, create a policy to ${RED}BLOCK deployments with no CPU/mem quotas${NC}."
 echo -e ""
 echo -e "Why a ${RED}minimum${NC} quota?"
 p "To be sure the pod will have enough CPU/mem to run correctly."
@@ -253,7 +253,7 @@ clear
 echo "---"
 echo -e "${GREEN}Check logs in K8s violations.${NC}"
 echo "---"
-echo -e "Modify VMware Carbon Black Container to ${RED}BLOCK --- COMMAND / Exec to container---${NC}"
+echo -e "Modify Carbon Black Container to ${RED}BLOCK --- COMMAND / Exec to container---${NC}"
 wait
 echo ""
 echo -e "Let's open a shell in the pod, and try to download a malware"
@@ -272,7 +272,7 @@ demo_log4j() {
 clear
 echo "Log4j demo"
 echo "---"
-echo -e "Modify VMware Carbon Black Container to ${RED}BLOCK --- CONTAINER IMAGES / Critical vulnerabilities ---${NC}"
+echo -e "Modify Carbon Black Container to ${RED}BLOCK --- CONTAINER IMAGES / Critical vulnerabilities ---${NC}"
 echo -e "Create an ${GREEN}exception${NC} if needed"
 wait
 echo -e ""
@@ -288,7 +288,7 @@ pe "kubectl run log4j --image=tamirmich/log4j2-demo:0.0.3"
 wait
 
 echo "---"
-echo -e "Modify VMware Carbon Black Container to ${RED}ALERT --- CONTAINER IMAGES / Critical vulnerabilities ---${NC}"
+echo -e "Modify Carbon Black Container to ${RED}ALERT --- CONTAINER IMAGES / Critical vulnerabilities ---${NC}"
 wait
 
 #In case it was not blocked, delete this log4j pod
@@ -356,7 +356,7 @@ kubectl delete deployments.apps nginx >/dev/null 2>&1
 kubectl delete services nginx >/dev/null 2>&1
 
 echo "---"
-echo -e "Modify VMware Carbon Black Container to ${RED}ENFORCE --- Allow PRIVILEGED containers---${NC}"
+echo -e "Modify Carbon Black Container to ${RED}ENFORCE --- Allow PRIVILEGED containers---${NC}"
 wait
 echo ""
 echo -e "Check that CB mutating webhook is ready"
