@@ -3,8 +3,8 @@
 # to debug, uncomment next line
 #set -x
 
-WEBSITE_TITLE="VMware"
-WEBSITE_URL="www.vmware.com"
+WEBSITE_TITLE="Carbon Black"
+WEBSITE_URL="www.carbonblack.com"
 
 clear
 echo "---"
@@ -36,11 +36,11 @@ then
    sudo apt-get install -y make
 fi
 
-echo "Check that VMware Carbon Black Cloud Linux agent is running..."
+echo "Check that Carbon Black Cloud Linux agent is running..."
 pgrep cbagentd >/dev/null
 if [ $? -eq 1 ]
 then
-   echo -e "Please install ${RED}VMware Carbon Black Cloud Linux agent${NC}"
+   echo -e "Please install ${RED}Carbon Black Cloud Linux agent${NC}"
    exit 1
 fi
 
@@ -149,7 +149,7 @@ wait
 
 #clear
 echo "---"
-echo -e "${RED}VMware Carbon Black Cloud Linux${NC} can protect many Linux distributions:"
+echo -e "${RED}Carbon Black Cloud Linux${NC} can protect many Linux distributions:"
 wait
 echo " - Ubuntu / Debian"
 wait
@@ -183,7 +183,7 @@ wait
 
 echo ""
 echo "---"
-echo -e "${GREEN}Investigate${NC} in VMware Carbon Black Cloud console with the following query:"
+echo -e "${GREEN}Investigate${NC} in Carbon Black Cloud console with the following query:"
 echo "(process_name:apache2 AND childproc_name:\/usr\/bin\/dash)"
 echo -e "Create an ${GREEN}custom Indicator of Compromise (IOC]${NC} and rerun the attack:"
 pe "firefox http://${WEBSITE_URL}.copy/attack.php >/dev/null 2>&1 &"
@@ -198,7 +198,7 @@ pe "sha256sum sleepy_binary"
 wait
 
 echo "---"
-echo -e "Now ${RED}ban this hash${NC} in VMware Carbon Black Cloud console:"
+echo -e "Now ${RED}ban this hash${NC} in Carbon Black Cloud console:"
 echo "Enforce -> Reputation"
 wait
 
@@ -216,7 +216,7 @@ pe "./sleepy_binary"
 echo ""
 
 echo "---"
-#echo -e "VMware Carbon Black provides a ${GREEN}Linux test file${NC}, something like ${GREEN}EICAR${NC} on Windows"
+#echo -e "Carbon Black provides a ${GREEN}Linux test file${NC}, something like ${GREEN}EICAR${NC} on Windows"
 #echo "Let's download it"
 #pe "wget https://github.com/slist/LinuxMalware/raw/main/cctest"
 #echo ""
@@ -231,7 +231,7 @@ echo "---"
 #echo ""
 #echo ""
 #echo "---"
-#echo -e "In 1 minute maximum, you will see some ${RED}alerts${NC} in VMware Carbon Black console"
+#echo -e "In 1 minute maximum, you will see some ${RED}alerts${NC} in Carbon Black console"
 echo ""
 echo ""
 echo -e "${GREEN}THANK YOU!${NC}"
