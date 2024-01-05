@@ -10,7 +10,7 @@ chmod +x demo-linux.sh
 chmod +x demo-k8s.sh
 ```
 
-## If you want to demo VMware Carbon Black Cloud Linux, run:
+## If you want to demo Carbon Black Cloud Linux, run:
 ``` sh
 ./demo-linux.sh
 ```
